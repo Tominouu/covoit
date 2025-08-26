@@ -1,1 +1,1 @@
-export const Sonner = (props: any) => <div {...props} />;
+export const Toaster = (props: any) => <div {...props} />;

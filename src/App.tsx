@@ -2,20 +2,21 @@ import React, { useEffect, useMemo, useState } from "react";
 import { createRoot } from "react-dom/client";
 import { BrowserRouter, Routes, Route, Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Car, Users, Calendar, Plus, SteeringWheel, LogOut, Settings, Loader2, ChevronRight, CheckCircle2, MapPin, Clock4, UserPlus, ShieldCheck } from "lucide-react";
+import { Car, Users, Calendar, Plus, LogOut, Settings, Loader2, ChevronRight, CheckCircle2, MapPin, Clock4, UserPlus, ShieldCheck } from "lucide-react";
+import { SteeringWheel } from "./components/SteeringWheel";
 
 // shadcn/ui components
-import { Button } from "@/components/ui/Button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/Card";
-import { Input } from "@/components/ui/Input";
-import { Label } from "@/components/ui/Label";
-import { Textarea } from "@/components/ui/Textarea";
-import { Avatar, AvatarFallback } from "@/components/ui/Avatar";
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/Dialog";
-import { Badge } from "@/components/ui/Badge";
-import { Separator } from "@/components/ui/Separator";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/Select";
-import { Toaster } from "@/components/ui/Sonner";
+import { Button } from "./components/ui/Button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "./components/ui/Card";
+import { Input } from "./components/ui/Input";
+import { Label } from "./components/ui/Label";
+import { Textarea } from "./components/ui/Textarea";
+import { Avatar, AvatarFallback } from "./components/ui/Avatar";
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "./components/ui/Dialog";
+import { Badge } from "./components/ui/Badge";
+import { Separator } from "./components/ui/Separator";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./components/ui/Select";
+import { Toaster } from "./components/ui/Sonner";
 import { toast } from "sonner";
 
 // --- Firebase (SDK v9 modular) ---
