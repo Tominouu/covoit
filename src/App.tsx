@@ -19,12 +19,10 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from ".
 import { Toaster } from "./components/ui/Sonner";
 import { toast } from "sonner";
 
-// --- Firebase (SDK v9 modular) ---
-// IMPORTANT: replace with your own Firebase config. For local dev, keep env vars.
-// Netlify: add environment variables in Site Settings > Build & Deploy > Environment.
+// Firebase
 import { initializeApp } from "firebase/app";
 import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut, type User } from "firebase/auth";
-import { getFirestore, collection, addDoc, onSnapshot, doc, setDoc, getDoc, query, where, serverTimestamp } from "firebase/firestore";
+import { getFirestore, collection, addDoc, onSnapshot, doc, setDoc, query, where, serverTimestamp } from "firebase/firestore";
 
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
@@ -47,16 +45,16 @@ export type Member = { id: string; name: string; photoURL?: string | null; email
 export type Ride = {
   id?: string;
   groupId: string;
-  date: string; // ISO date
+  date: string;
   from: string;
   to: string;
-  participants: string[]; // member ids present
-  driverId: string; // chosen driver
+  participants: string[];
+  driverId: string;
 };
 export type Group = {
   id: string;
   name: string;
-  code: string; // invite code
+  code: string;
   ownerId: string;
   members: Member[];
 };
@@ -64,43 +62,32 @@ export type Group = {
 // --------------------
 // Simple Fairness Engine
 // --------------------
-/**
- * Compute the next fair driver among "present" members using a history of rides.
- * Strategy:
- *  - Count drives per member (in this group) across history.
- *  - Use a recency decay so very old rides comptent moins (ex: weight = 0.9^months_since).
- *  - Prefer members in `present` who have the lowest weighted count.
- *  - Tie-breaker: who hasn't driven for the longest time.
- */
 function nextDriver({ present, history, nowISO }: { present: string[]; history: Ride[]; nowISO?: string }) {
   if (!present.length) return null;
   const now = nowISO ? new Date(nowISO) : new Date();
   const counts = new Map<string, number>();
-  const lastDates = new Map<string, number>(); // epoch ms of last drive
+  const lastDates = new Map<string, number>();
 
-  // init
   for (const m of present) {
     counts.set(m, 0);
     lastDates.set(m, 0);
   }
 
-  const DECAY = 0.92; // monthly decay
+  const DECAY = 0.92;
   for (const r of history) {
     const d = new Date(r.date);
     const months = Math.max(0, (now.getTime() - d.getTime()) / (1000 * 60 * 60 * 24 * 30));
     const weight = Math.pow(DECAY, months);
     if (counts.has(r.driverId)) {
-      counts.set(r.driverId, (counts.get(r.driverId) || 0) + 1 * weight);
+      counts.set(r.driverId, (counts.get(r.driverId) || 0) + weight);
       lastDates.set(r.driverId, Math.max(lastDates.get(r.driverId) || 0, d.getTime()));
     }
   }
 
-  // find minimal weighted count among present
   const sorted = [...present].sort((a, b) => {
     const ca = counts.get(a) ?? 0;
     const cb = counts.get(b) ?? 0;
-    if (ca !== cb) return ca - cb; // fewer weighted drives first
-    // tie-breaker: older last drive first
+    if (ca !== cb) return ca - cb;
     const la = lastDates.get(a) ?? 0;
     const lb = lastDates.get(b) ?? 0;
     return la - lb;
@@ -161,7 +148,7 @@ function PageShell({ children, user }: { children: React.ReactNode; user: User |
 }
 
 // --------------------
-// Auth Gate
+// Auth Hook
 // --------------------
 function useAuth() {
   const [user, setUser] = useState<User | null>(null);
@@ -177,8 +164,7 @@ function useAuth() {
 }
 
 // --------------------
-// Mocked Firestore queries (minimal viable wiring)
-// In production, create collections: groups, rides, memberships.
+// Firestore Helpers
 // --------------------
 async function createGroup(name: string, ownerId: string) {
   const code = Math.random().toString(36).slice(2, 8).toUpperCase();
@@ -228,7 +214,9 @@ function Dashboard({ user }: { user: User }) {
               <CardTitle className="flex items-center gap-2">
                 <Users className="h-5 w-5" /> {g.name}
               </CardTitle>
-              <CardDescription>Code d'invitation: <Badge variant="secondary">{g.code}</Badge></CardDescription>
+              <CardDescription>
+                Code d'invitation: <Badge variant="secondary">{g.code}</Badge>
+              </CardDescription>
             </CardHeader>
             <CardContent className="flex items-center justify-between">
               <div className="flex items-center gap-2 text-sm text-slate-600">
@@ -278,7 +266,11 @@ function CreateGroupDialog({ user }: { user: User }) {
         <div className="grid gap-4 py-2">
           <div className="grid gap-2">
             <Label>Nom du groupe</Label>
-            <Input placeholder="Ex: MMI Covoit" value={name} onChange={(e) => setName(e.target.value)} />
+            <Input
+              placeholder="Ex: MMI Covoit"
+              value={name}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setName(e.target.value)}
+            />
           </div>
         </div>
         <DialogFooter>
@@ -689,7 +681,6 @@ export default function App() {
   return <AppRouter />;
 }
 
-// Render if used standalone in Vite preview
 const container = document.getElementById("root");
 if (container) {
   const root = createRoot(container);
