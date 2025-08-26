@@ -593,7 +593,7 @@ function Landing() {
         <p className="text-slate-600">Crée un groupe, invite tes collègues, puis laisse l'algorithme choisir le conducteur le plus juste à chaque trajet — même si vous n'êtes pas le même nombre chaque jour.</p>
         <div className="flex gap-3">
           <Button onClick={() => signInWithPopup(auth, provider)} className="gap-2"><GoogleIcon /> Continuer avec Google</Button>
-          <Button variant="outline" asChild><a href="#features">En savoir plus</a></Button>
+          <Button variant="outline"><a href="#features">En savoir plus</a></Button>
         </div>
         <div id="features" className="grid grid-cols-2 gap-3 pt-4">
           <Feature icon={<Car className="h-4 w-4" />} title="Trajets rapides" desc="Ajout en 10 secondes" />
@@ -663,7 +663,7 @@ function NotFound() {
         <div className="text-7xl">🤷‍♂️</div>
         <h2 className="text-2xl font-semibold">Page introuvable</h2>
         <p className="text-slate-600">Reviens à l'accueil pour continuer.</p>
-        <Button asChild><a href="/">Accueil</a></Button>
+        <Button><a href="/">Accueil</a></Button>
       </div>
     </div>
   );
