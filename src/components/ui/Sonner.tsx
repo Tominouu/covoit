@@ -1,0 +1,1 @@
+export const Sonner = (props: any) => <div {...props} />;

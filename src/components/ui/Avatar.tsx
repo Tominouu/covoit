@@ -1,0 +1,1 @@
+export const Avatar = (props: any) => <div {...props} />;
