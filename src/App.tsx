@@ -121,7 +121,7 @@ function PageShell({ children, user }: { children: React.ReactNode; user: User |
         <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3">
           <Link to="/" className="flex items-center gap-2 font-semibold">
             <div className="inline-flex h-9 w-9 items-center justify-center rounded-2xl bg-black text-white shadow">
-              <SteeringWheel className="h-5 w-5" />
+              <SteeringWheel />
             </div>
             <span>Carpool Fair</span>
           </Link>
@@ -368,7 +368,7 @@ function GroupPage({ groupId }: { groupId: string }) {
               <Calendar className="h-4 w-4" />
               <span>Suggéré aujourd'hui :</span>
               <Badge className="gap-1" variant="outline">
-                <SteeringWheel className="h-3 w-3" /> {group.members?.find((m) => m.id === suggestedDriver)?.name || "—"}
+                <SteeringWheel /> {group.members?.find((m) => m.id === suggestedDriver)?.name || "—"}
               </Badge>
             </div>
           </div>
@@ -402,7 +402,7 @@ function GroupPage({ groupId }: { groupId: string }) {
                     </div>
                   </div>
                 </div>
-                <Badge variant="secondary" className="gap-1"><SteeringWheel className="h-3 w-3" /> Conduit</Badge>
+                <Badge variant="secondary" className="gap-1"><SteeringWheel/> Conduit</Badge>
               </div>
             ))}
           </div>
@@ -465,7 +465,7 @@ function AddRideDialog({ group, present }: { group: Group; present: string[] }) 
             <Label>Conducteur suggéré</Label>
             <Select disabled>
               <SelectTrigger>
-                <SelectValue placeholder="Calcul automatique" />
+                <SelectValue />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="auto">Auto</SelectItem>
@@ -480,15 +480,15 @@ function AddRideDialog({ group, present }: { group: Group; present: string[] }) 
             onClick={async () => {
               const driverId = nextDriver({ present, history: [] }) || present[0];
               try {
-                const ref = await addDoc(collection(db, "groups", group.id, "rides"), {
+                await addDoc(collection(db, "groups", group.id, "rides"), {
                   groupId: group.id,
+                  from: from.trim(),
+                  to: to.trim(),
                   date: new Date(date).toISOString(),
-                  from,
-                  to,
                   participants: present,
                   driverId,
                   createdAt: serverTimestamp(),
-                } satisfies Ride as any);
+                } as Ride);
                 toast.success("Trajet ajouté", { description: `Conducteur: ${group.members?.find((m)=>m.id===driverId)?.name || "—"}` });
                 setOpen(false);
                 setFrom("");
@@ -598,7 +598,7 @@ function Landing() {
         <div id="features" className="grid grid-cols-2 gap-3 pt-4">
           <Feature icon={<Car className="h-4 w-4" />} title="Trajets rapides" desc="Ajout en 10 secondes" />
           <Feature icon={<Users className="h-4 w-4" />} title="Groupes" desc="Invitations par code" />
-          <Feature icon={<SteeringWheel className="h-4 w-4" />} title="Équité" desc="Algo transparent" />
+          <Feature icon={<SteeringWheel/>} title="Équité" desc="Algo transparent" />
           <Feature icon={<Calendar className="h-4 w-4" />} title="Historique" desc="Vue détaillée" />
         </div>
       </div>
@@ -648,7 +648,7 @@ function MockPreviewCard() {
                 </div>
               </div>
             </div>
-            <Badge variant="outline" className="gap-1"><SteeringWheel className="h-3 w-3" /> OK</Badge>
+            <Badge variant="outline" className="gap-1"><SteeringWheel/> OK</Badge>
           </div>
         ))}
       </div>
