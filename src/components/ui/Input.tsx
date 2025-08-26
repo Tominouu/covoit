@@ -1,1 +1,3 @@
-export const Input = (props: any) => <input {...props} />;
+import React from "react";
+
+export const Input: React.FC<React.InputHTMLAttributes<HTMLInputElement>> = (props) => <input {...props} />;

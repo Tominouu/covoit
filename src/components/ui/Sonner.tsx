@@ -1,1 +1,3 @@
-export const Toaster = (props: any) => <div {...props} />;
+import React from "react";
+
+export const Toaster: React.FC<React.HTMLAttributes<HTMLDivElement> & { richColors?: boolean }> = (props) => <div {...props}>{props.children}</div>;

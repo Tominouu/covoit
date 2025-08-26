@@ -1,3 +1,4 @@
-// src/components/ui/Avatar.tsx
-export const Avatar = (props: any) => <div {...props} />;
-export const AvatarFallback = (props: any) => <div {...props} />;
+import React from "react";
+
+export const Avatar: React.FC<React.HTMLAttributes<HTMLDivElement>> = (props) => <div {...props} />;
+export const AvatarFallback: React.FC<React.HTMLAttributes<HTMLDivElement>> = (props) => <div {...props} />;

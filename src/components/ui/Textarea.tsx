@@ -1,1 +1,3 @@
-export const Textarea = (props: any) => <textarea {...props} />;
+import React from "react";
+
+export const Textarea: React.FC<React.TextareaHTMLAttributes<HTMLTextAreaElement>> = (props) => <textarea {...props} />;
